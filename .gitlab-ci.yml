@@ -1,0 +1,43 @@
+variables:
+    DOCKER_REGISTRY: <account>.dkr.ecr.<your-region>.amazonaws.com
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_DRIVER: overlay2
+    DOCKER_TLS_CERTDIR: ""
+
+stages:
+    - test
+    - build
+    - deploy
+
+test_app:
+    stage: test
+    image: python:slim
+    before_script:
+        - pip install -r requirements.txt
+    script:
+        - pyflakes app.py
+
+build_app:
+    stage: build
+    image:
+      name: docker:latest
+    services:
+        - docker:24-dind
+    before_script:
+        - apk add --no-cache curl jq python3 py3-pip git
+        - pip install awscli
+        - aws ecr get-login-password --region <your-region> | docker login --username AWS --password-stdin $DOCKER_REGISTRY
+        - aws --version
+        - docker --version
+    script:
+        - echo $CI_PIPELINE_IID
+        - docker build -t $DOCKER_REGISTRY/project:$CI_PIPELINE_IID .
+        - docker push $DOCKER_REGISTRY/project:$CI_PIPELINE_IID
+
+deploy_app:
+    stage: deploy
+    before_script:
+        - chmod 400 $KEY
+        - echo $CI_PIPELINE_IID
+    script:
+        - ssh -o StrictHostKeyChecking=no -i $KEY ubuntu@<EC2-public-IP> "docker rm -f $(docker ps -aq) ; docker run -d -p 5000:5000 $DOCKER_REGISTRY/project:$CI_PIPELINE_IID"
