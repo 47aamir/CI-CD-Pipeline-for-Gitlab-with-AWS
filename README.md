@@ -9,11 +9,11 @@ This repository contains a GitLab CI/CD pipeline configuration for building, tes
 
 2. Create GitLab CI/CD Variables:
    - Go to your GitLab project and navigate to Settings > CI/CD > Variables.
-   - Add the following variables to conceal sensitive information:
-     - `DOCKER_REGISTRY`: Replace with the appropriate Docker registry URL.
-     - `DOCKER_HOST`: Replace with the Docker host information.
-     - `DOCKER_DRIVER`: Replace with the Docker driver information.
-     - `DOCKER_TLS_CERTDIR`: Replace with the Docker TLS certificate directory (if required).
+      - Add the following variables to conceal sensitive information:
+        - `AWS_ACCESS_KEY_ID`: Your AWS Access Key ID
+        - `AWS_SECRET_ACCESS_KEY`: Uor AWS Secret Access Key
+      - Add the following file to conceal sensitive information:
+        - `AWS_KEY`: Copy and paste content of SSH-Key as file
 
 ## Pipeline Stages
 
