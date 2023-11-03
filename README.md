@@ -15,9 +15,6 @@ This repository contains a GitLab CI/CD pipeline configuration for building, tes
      - `DOCKER_DRIVER`: Replace with the Docker driver information.
      - `DOCKER_TLS_CERTDIR`: Replace with the Docker TLS certificate directory (if required).
 
-3. Run the Pipeline:
-   - Push changes to this repository, and the GitLab CI/CD pipeline will be triggered automatically.
-
 ## Pipeline Stages
 
 - test: This stage runs tests on your application.
